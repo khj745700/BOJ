@@ -44,7 +44,7 @@ public class Main {
                 visited[i] = true;
                 list.add(arr[i]);
                 backTracking(depth + 1, list);
-                list.remove((Integer) arr[i]);
+                list.remove(list.size() - 1);
                 visited[i] = false;
             }
         }
