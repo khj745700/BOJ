@@ -19,9 +19,9 @@ public class Main {
         visited = new boolean[N];
         StringTokenizer st;
         for(int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
+            String[] str = br.readLine().split(" ");
             for(int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+                map[i][j] = Integer.parseInt(str[j]);
             }
         }
 
