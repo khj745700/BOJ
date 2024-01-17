@@ -25,14 +25,12 @@ public class Main {
             }
         }
 
-
+        List<Integer> list = new ArrayList<>();
         for(int i = 0 ; i < N; i++) {
-            List<Integer> list = new ArrayList<>();
             backtracking(i, 0, i, list);
         }
         System.out.println(min);
     }
-
 
     static void backtracking(int start, int depth, int now, List<Integer> list) {
         if(depth == N - 1 && map[now][start] != 0) {
