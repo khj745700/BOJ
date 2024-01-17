@@ -35,8 +35,8 @@ public class Main {
     static void backtracking(int start, int now, List<Integer> list) {
         if(list.size() == N - 1 && map[now][start] != 0) {
             int sum = 0;
-            for(Integer i : list) {
-                sum += i;
+            for(int i = 0 ; i < list.size(); i++) {
+                sum += list.get(i);
             }
             sum += map[now][start];
             min = Math.min(sum, min);
