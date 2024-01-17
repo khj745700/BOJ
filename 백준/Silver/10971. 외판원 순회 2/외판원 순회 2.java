@@ -27,13 +27,13 @@ public class Main {
 
         List<Integer> list = new ArrayList<>();
         for(int i = 0 ; i < N; i++) {
-            backtracking(i, 0, i, list);
+            backtracking(i, i, list);
         }
         System.out.println(min);
     }
 
-    static void backtracking(int start, int depth, int now, List<Integer> list) {
-        if(depth == N - 1 && map[now][start] != 0) {
+    static void backtracking(int start, int now, List<Integer> list) {
+        if(list.size() == N - 1 && map[now][start] != 0) {
             int sum = 0;
             for(Integer i : list) {
                 sum += i;
@@ -45,12 +45,11 @@ public class Main {
 
         visited[now] = true;
         for(int i = 0; i < N; i++) {
-            if(visited[i] || map[now][i] == 0) {
-                continue;
+            if(!visited[i] && map[now][i] != 0) {
+                list.add(map[now][i]);
+                backtracking(start, i, list);
+                list.remove(list.size() -1);
             }
-            list.add(map[now][i]);
-            backtracking(start, depth + 1, i, list);
-            list.remove(list.size() -1);
         }
         visited[now] = false;
     }
