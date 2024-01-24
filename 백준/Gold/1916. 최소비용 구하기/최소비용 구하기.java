@@ -4,22 +4,22 @@ import java.util.*;
 
 public class Main {
     static int N;
-    static long[][] graph;
-    static long[] d;
+    static int[][] graph;
+    static int[] d;
     static boolean[] visited;
 
-    static final long INF = Integer.MAX_VALUE;
+    static final int INF = 1_000_000_000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         int M = Integer.parseInt(br.readLine());
-        graph = new long[N][N];
+        graph = new int[N][N];
         for(int i = 0 ; i < N; i++) {
             Arrays.fill(graph[i], INF);
         }
         visited = new boolean[N];
-        d = new long[N];
+        d = new int[N];
         StringTokenizer st;
         while(M --> 0) {
             st = new StringTokenizer(br.readLine());
@@ -55,7 +55,7 @@ public class Main {
 
 
     static int getSmallIndex() {
-        long min = INF;
+        int min = INF;
         int idx = -1;
         for(int i = 0 ; i < N; i++) {
             if(d[i] < min && !visited[i]){
