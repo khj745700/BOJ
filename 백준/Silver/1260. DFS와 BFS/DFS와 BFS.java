@@ -1,81 +1,86 @@
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-
-
+import java.io.*;
+import java.util.*;
 public class Main {
-
-    static int[][] treeArray;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static int N, M, V;
+    static int [][] arr;
     static boolean[] visited;
     public static void main(String[] args) throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        V = Integer.parseInt(st.nextToken());
 
-        Scanner sc = new Scanner(System.in);
-
-        int N = sc.nextInt();   // 정점개수
-        int M = sc.nextInt();   // 간선개수
-        int V = sc.nextInt();   // 시작정점번호 
-
-        treeArray = new int[N+1][N+1];
+        arr = new int[N+1][N+1];
 
         for(int i = 0; i < M; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            // 연결된 노드를 1로 세팅
-            treeArray[a][b] = 1;
-            treeArray[b][a] = 1;
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            arr[start][end] = 1;
+            arr[end][start] = 1;
         }
-
-        // node가 1부터 시작하기 때문에 N + 1
-        visited = new boolean[N + 1];
+        visited = new boolean[N+1];
         dfs(V);
-
-        System.out.println();
-
-        visited = new boolean[N + 1];
-
+        bw.newLine();
+        bw.flush();
+        visited = new boolean[N+1];
         bfs(V);
-
-        System.out.println();
+        bw.flush();
     }
 
-    private static void dfs(int v) {
-        visited[v] = true;
-        System.out.print(v + " ");
 
-        if(v == treeArray.length) return;
-
-        for(int j = 1; j < treeArray.length; j++) {
-        	// 연결된 노드인데 방문하지 않은 경우 
-            if(treeArray[v][j] == 1 && visited[j] == false) {
-            	// 연결된 노드 찾으면 재귀함수 호출
-                dfs(j);
+    static void dfs(int start) throws IOException {
+        if(start == -1) {
+            return;
+        }
+        if(visited[start]) {
+            return;
+        }
+        visited[start] = true;
+        bw.append(Integer.toString(start)).append(" ");
+        for(int i = 1; i <= N; i++) {
+            if(canGo(start, i)) {
+                dfs(i);
             }
         }
     }
 
+    static void bfs(int start) throws IOException {
+        Queue<Integer> q = new ArrayDeque<>();
 
+        q.add(start);
 
-    private static void bfs(int v) {
-        Queue<Integer> queue = new LinkedList<Integer>();
-        queue.offer(v);
-        visited[v] = true;
-
-        System.out.print(v + " ");
-
-        while(!queue.isEmpty()) {
-            int n = queue.poll();
-
-			// 노드 하나로 연결된 노드 먼저 다 체크 
-            for(int i = 1; i < treeArray.length; i++) {
-           		 // 연결된 노드인데 방문하지 않은 경우 
-                if(treeArray[n][i] == 1 && visited[i] == false) {
-                    visited[i] = true;
-                    System.out.print(i + " ");
-                    queue.offer(i);
+        while(!q.isEmpty()) {
+            int cur = q.poll();
+            if(visited[cur]){
+                continue;
+            }
+            visited[cur] = true;
+            bw.append(Integer.toString(cur)).append(" ");
+            for(int i = 1 ; i <= N; i++) {
+                if(canGo(cur, i)) {
+                    q.add(i);
                 }
             }
-        }   
+        }
+
     }
 
+    static int findFirstIdx(int start) {
+        int target = -1;
+        for(int i = 1 ; i <= N; i++) {
+            if(canGo(start, i)) {
+                target = i;
+                break;
+            }
+        }
+
+        return target;
+    }
+
+    static boolean canGo(int start, int end) {
+        return !visited[end] && arr[start][end] > 0;
+    }
 }
