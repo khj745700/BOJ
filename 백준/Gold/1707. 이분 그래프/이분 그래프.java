@@ -1,62 +1,91 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-	
-	public static void solution(List<Integer>[] lists, int v, int e) {
-		Boolean[] value_matrix = new Boolean[v];
-		Queue<Integer> queue = new ArrayDeque<>();
-		for(int i=0; i<v; i++) {
-			if(value_matrix[i] == null) {
-				value_matrix[i] = true;
-				queue.add(i);
-				while(!queue.isEmpty()) {
-					int vertex = queue.poll();
-					for(int j : lists[vertex])
-						if(value_matrix[j] == null) {
-							queue.add(j);
-							value_matrix[j] = !value_matrix[vertex];
-						}
-						else
-							if(value_matrix[j] == value_matrix[vertex]) {
-								System.out.println("NO");
-								return;
-							}
-				}
-			}
-		}
-		System.out.println("YES");
-	}
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int t = Integer.parseInt(br.readLine());
-		int[] v = new int[t];
-		int[] e = new int[t];
-		
-		List<Integer>[] list = null;
-		
-		for(int i=0; i<t; i++) {
-			String[] temp = br.readLine().split(" ");
-			v[i] = Integer.parseInt(temp[0]);
-			e[i] = Integer.parseInt(temp[1]);
-			list = new ArrayList[v[i]];
-			for(int j=0; j<v[i]; j++)
-				list[j] = new ArrayList<>();
-			for(int j=0; j<e[i]; j++) {
-				temp = br.readLine().split(" ");
-				int x = Integer.parseInt(temp[0])-1;
-				int y = Integer.parseInt(temp[1])-1;
-				list[x].add(y);
-				list[y].add(x);
-			}
-			solution(list, v[i], e[i]);
 
-		}
-	}
+    static int V,E;
+    static int[] colors;
+    static boolean isno;
+    static ArrayList<Integer>[] list;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int T = Integer.parseInt(st.nextToken());
+
+        // 테스트 케이스
+        for(int i=0 ; i<T;i++) {
+            st = new StringTokenizer(br.readLine());
+            V = Integer.parseInt(st.nextToken());
+            E = Integer.parseInt(st.nextToken());
+            isno = false;
+            list = new ArrayList[V+1];
+            colors = new int[V+1];
+
+        //리스트 초기화
+        for(int j = 1; j<V+1;j++) {
+            list[j] = new ArrayList<Integer>();
+        }
+
+        //양방향 연결
+        for(int j = 0; j<E; j++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            list[a].add(b);
+            list[b].add(a);
+
+        }
+        
+        
+        // 방문하지 않았다면 탐색
+        for(int k = 1; k<V+1; k++) {
+            if(colors[k] == 0 && !isno)
+                dfs(k,1);
+        }
+        
+        
+        // 이분 그래프면
+        if(!isno) {
+            bw.write("YES");
+            bw.newLine();
+            bw.flush();
+        }
+        else {
+            bw.write("NO");
+            bw.newLine();
+            bw.flush();
+        }
+            
+    }
+    bw.close();
+}
+
+static void dfs(int node,int color) {
+    colors[node] = color;
+    
+    
+    // 현재 노드와 연결된 노드 탐색
+    for(int a : list[node]) {
+        
+    	//만약 방문하지 않았다면
+        if (colors[a] == 0) {
+        	//다른 색깔로 다시 탐색
+            dfs(a, color * -1);
+        }
+        
+        //만약 방문했는데 현재 노드와 같은 컬러라면
+        if (colors[a] == colors[node]) {
+            isno = true;
+            return;
+        }
+    }
+}
 }
