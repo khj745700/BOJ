@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class Main {
 			for(int val : arr) {
 				sb.append(val).append(' ');
 			}
-			sb.append("\n");
+			sb.append('\n');
 			return;
 		}
 		for(int i = 1; i <= N; i++) {
