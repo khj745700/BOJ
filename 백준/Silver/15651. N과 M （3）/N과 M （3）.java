@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,6 +9,7 @@ public class Main {
 	static int M;
 	static int[] arr;
 	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -18,15 +18,15 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		arr = new int[M];
 		rec(0);
-		bw.flush();
+		System.out.println(sb.toString());
 	}
 	
 	static void rec(int n) throws IOException {
 		if(n == M) {
 			for(int val : arr) {
-				bw.append(Integer.toString(val)).append(" ");
+				sb.append(val).append(' ');
 			}
-			bw.newLine();
+			sb.append("\n");
 			return;
 		}
 		for(int i = 1; i <= N; i++) {
