@@ -7,8 +7,10 @@ public class Main {
     static int N;
     static List<Integer>[] arr;
     static int[] visited;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         N = Integer.parseInt(br.readLine());
         arr = new List[N+1];
         visited = new int[N+1];
@@ -26,8 +28,10 @@ public class Main {
         visited[1] = 1;
         buildTrees(1);
         for(int i = 2; i <= N; i++) {
-            System.out.println(visited[i]);
+            sb.append(visited[i]);
+            sb.append('\n');
         }
+        System.out.println(sb.toString());
     }
 
     static void buildTrees(int start) {
