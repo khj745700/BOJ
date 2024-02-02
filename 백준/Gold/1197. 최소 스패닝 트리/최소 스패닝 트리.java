@@ -1,73 +1,73 @@
-import java.io.*;
-import java.util.*;
-class Edge implements Comparable<Edge> {
-    int e,d,v;
-    Edge(int a,int b,int c){
-     e = a; d = b; v = c;
-    }
-
-    @Override
-    public int compareTo(Edge e){
-        if(this. v > e.v){
-            return 1;
-        }else if(this.v == e.v){
-            return 0;
-        }else{
-            return -1;
-        }
-    }
-}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 public class Main {
-    static int[] data;
-    static int findSet(int p){
-        if(p == data[p]){
-            return p;
-        }
-        data[p] = findSet(data[p]);
-        return data[p];
-    }
+	static class Edge implements Comparable<Edge>{
+		public Edge(int u, int v, int w) {
+			this.u = u;
+			this.v = v;
+			this.w = w;
+		}
+		int u;
+		int v;
+		int w;
+		@Override
+		public int compareTo(Edge o) {
+			return this.w - o.w;
+		}
+	}
+	
+	
+	static boolean[] selected;
+	static int result;
+	static int cnt = 0;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] temp = br.readLine().split(" ");
+		int vn = Integer.parseInt(temp[0]); // 노드갯수
+		int en = Integer.parseInt(temp[1]); // 갯수
+		PriorityQueue<Edge> pq = new PriorityQueue<>(en); //가중치 비용 뽑기 위함.
+		boolean[] selected = new boolean[vn];
+		for(int i=0; i<en; i++) {
+			temp = br.readLine().split(" ");
+			int u = Integer.parseInt(temp[0])-1;
+			int v = Integer.parseInt(temp[1])-1;
+			int w = Integer.parseInt(temp[2]);
+			pq.add(new Edge(u,v,w));
+		}
+		ArrayList<Edge> list = new ArrayList<Edge>();
+		Edge edge = pq.poll();
+		selected[edge.u] = true;
+		selected[edge.v] = true;
+		result += edge.w;
 
-    static void unionSet(int a, int b){
-        int ap = findSet(a);
-        int bp = findSet(b);
-        data[ap] = bp;
-    }
+		
+		
+		//
+		cnt=2; // 노드를 두가지를 넣음.
+		while(cnt != vn) {
+			edge = pq.poll(); // 우선순위중 가중치 젤 낮은 거 뽑음.
+			int u = edge.u;
+			int v = edge.v;
 
-    public static void main(String args[]) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int nodeNum = Integer.parseInt(st.nextToken());
-        int lineNum = Integer.parseInt(st.nextToken());
-
-        ArrayList<Edge> line = new ArrayList<>();
-        data = new int[nodeNum+1];
-
-        for(int i  = 1 ; i < data.length; i++){
-            data[i] = i;
-        }
-
-        for(int i = 0 ; i < lineNum ; i++){
-            st = new StringTokenizer(br.readLine());
-            int first = Integer.parseInt(st.nextToken());
-            int second = Integer.parseInt(st.nextToken());
-            int val = Integer.parseInt(st.nextToken());
-            line.add(new Edge(first,second,val));
-        }
-        Collections.sort(line);
-
-        int sum = 0;
-        int t = 0;
-        for(int i = 0 ; i < lineNum; i++){
-            Edge e = line.get(i);
-            if(findSet(e.e) != findSet(e.d)){
-                unionSet(e.e, e.d);
-                sum += e.v;
-            }
-        }
-        bw.append(sum+"");
-        bw.flush();
-    }
+			if(selected[u] ^ selected[v]) { // 둘 다 선택되어있는 경우 사이클이 생기므로...
+				if(!selected[u]) {selected[u] = true; } 
+				if(!selected[v]) {selected[v] = true; }
+				cnt++;
+				result += edge.w;
+				pq.addAll(list);
+				list.clear();
+			}
+			else
+				if(selected[u] & selected[v]) {
+					continue;
+				}
+				list.add(edge);
+		}
+		System.out.println(result);
+	}
 }
