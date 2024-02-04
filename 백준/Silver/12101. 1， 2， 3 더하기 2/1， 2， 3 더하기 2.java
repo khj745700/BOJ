@@ -21,9 +21,9 @@ public class Main {
         System.out.println(sb.toString().isEmpty() ? -1 : sb.toString());
     }
 
-    static void backtracking(int sum, int depth) {
+    static boolean backtracking(int sum, int depth) {
         if(sum > N) {
-            return;
+            return false;
         }
         if(sum == N) {
             count++;
@@ -38,12 +38,18 @@ public class Main {
                         sb.append("+");
                     }
                 }
+                return true;
             }
-            return;
+            return false;
         }
+        boolean flag = false;
         for(int i = 0; i < canUse.length; i++) {
             answer[depth] = canUse[i];
-            backtracking(sum + answer[depth], depth+1);
+            if(flag = backtracking(sum + answer[depth], depth+1)){
+                break;
+            }
         }
+
+        return flag;
     }
 }
