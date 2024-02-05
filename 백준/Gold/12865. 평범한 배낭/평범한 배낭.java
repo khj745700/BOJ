@@ -7,7 +7,7 @@ public class Main {
     static int N, K;
     static int[] W;
     static int[] V;
-    static Integer[][] dp;
+    static int[][] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -16,33 +16,26 @@ public class Main {
 
         W = new int[N + 1];
         V = new int[K + 1];
-        dp = new Integer[N+1][K+1];
+        dp = new int[N+1][K+1];
         for(int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             W[i] = Integer.parseInt(st.nextToken());
             V[i] = Integer.parseInt(st.nextToken());
         }
 
-        System.out.println(knapsack(N, K));
-    }
-
-
-    static int knapsack(int i, int k) {
-        if(i < 0) {
-            return 0;
-        }
-
-        if(dp[i][k] == null) {
-            //만약 담을 수 없는 경우의 수
-            if(W[i] > k) {
-                dp[i][k] = knapsack(i-1,k);
-            }
-            //만약 담을 수 있는 경우의 수
-            if(W[i] <= k) {
-                dp[i][k] = Math.max(knapsack(i-1, k), knapsack(i-1, k-W[i]) + V[i]);
+        for(int i = 1; i <= N; i++) {
+            for(int j = 1; j <= K; j++) {
+                //만약 i번째 물건을 더 담을 수 있다면?
+                if(W[i-1] > j) {
+                    dp[i][j] = dp[i-1][j];
+                }
+                //만약 i번째 무게를 더 담을 수 있다면?
+                else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-W[i-1]] +V[i-1]);
+                }
             }
         }
-        return dp[i][k];
+        System.out.println(dp[N][K]);
     }
 
 }
