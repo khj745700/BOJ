@@ -4,7 +4,7 @@ import java.io.*;
 public class Main {
     static int N, M, H;
     static boolean[][][] ladder;
-    static int min = Integer.MAX_VALUE;
+    static int min = 4;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -25,13 +25,13 @@ public class Main {
             ladder[h][to][from] = true;
             ladder[h][from][to] = true;
         }
-        backtracking(M, 0);
-        System.out.println(min != Integer.MAX_VALUE ? min : -1);
+        backtracking(0, 0);
+        System.out.println(min != 4 ? min : -1);
     }
 
 
     static void backtracking(int cnt, int y) {
-        if(cnt - M > 3) {
+        if(cnt>= min) {
             return;
         }
 
@@ -45,7 +45,7 @@ public class Main {
         }
 
         if(flag) {
-            min = Integer.min(cnt - M, min);
+            min = Integer.min(cnt, min);
             return;
         }
 
@@ -61,6 +61,7 @@ public class Main {
                 if(j+2 < N && ladder[i][j+1][j+2]) { // 만약 다음 칸에 값이 있다면 패스
                     continue;
                 }
+
                 ladder[i][j][j+1] = true;
                 ladder[i][j+1][j] = true;
                 backtracking(cnt+1, i);
