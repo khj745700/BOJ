@@ -12,7 +12,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		T = Integer.parseInt(br.readLine());
-		
+		StringBuilder sb = new StringBuilder();
 		while(T --> 0) {
 			cube = new char[6][3][3];
 			for(int i = 0; i < 6; i++) {
@@ -45,11 +45,12 @@ public class Main {
 				rotate(num, round.charAt(1) == '-');
 			}
 			for(int i = 0 ; i < 3; i++) {
-				System.out.println(cube[0][i]);
+				sb.append(cube[0][i]);
+				sb.append('\n');
 			}
 
 		}
-		
+		System.out.println(sb);
 	}
 	
 	
