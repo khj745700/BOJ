@@ -10,8 +10,7 @@ public class Main {
     static PairBall start;
     static int endX;
     static int endY;
-    static int[] dx = {0,0,-1,1};
-    static int[] dy = {-1,1,0,0};
+    static boolean[][][][] visited;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -19,6 +18,7 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
 
         map = new char[N][M];
+        visited = new boolean[N][M][N][M];
         start = new PairBall();
         for(int i = 0; i < N; i++) {
             String input = br.readLine();
@@ -52,23 +52,22 @@ public class Main {
         q.add(start);
         while(!q.isEmpty()) {
             PairBall cur = q.poll();
-
-            if(cur.bx == endX && cur.by == endY) {
+            if(visited[cur.ry][cur.rx][cur.by][cur.bx]) {
                 continue;
             }
-
             if(cur.d == -1) {
                 continue;
             }
-
+            if(cur.bx == endX && cur.by == endY) {
+                continue;
+            }
             if(cur.rx == endX && cur.ry == endY) {
                 return cur.d;
             }
-
             if(cur.d == 11) {
                 break;
             }
-
+            visited[cur.ry][cur.rx][cur.by][cur.bx] = true;
             q.add(goLeft(cur));
             q.add(goRight(cur));
             q.add(goDown(cur));
@@ -132,8 +131,6 @@ public class Main {
             if(map[blueY][blueX + 1] == '#') {
                 break;
             }
-
-
             ++blueX;
         }
 
@@ -257,7 +254,6 @@ public class Main {
 
         PairBall(int a, int b, int c, int d, int v) {
             rx = a; ry = b; bx = c ; by = d; this.d = v;
-
         }
         PairBall() {
 
