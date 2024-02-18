@@ -71,7 +71,12 @@ public class Main {
         if(a == b) {
             return false;
         }
-        set[a] = b;
+        if(a < b) {
+            set[b] = a;
+        }
+        else {
+            set[a] = b;
+        }
         sum+=v.d;
         return true;
     }
