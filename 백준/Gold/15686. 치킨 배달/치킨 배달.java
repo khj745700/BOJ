@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main{
@@ -14,8 +12,6 @@ public class Main{
 	static List<int[]> house;
 	static int MIN = Integer.MAX_VALUE;
 	static boolean[] visited;
-	static int[] dx = {0, 0, -1, 1};
-	static int[] dy = {1, -1, 0, 0};
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -46,15 +42,12 @@ public class Main{
 	
 	
 	static void backtracking(int depth, int cnt) {
-
-		if(cnt == M || depth == chickens.size()) {
+		if(cnt == M) {
 			int val = 0;
 			for(int[] home : house) {
 				val += bfs(home[0], home[1]);
 			}
-			if(val > 0) {
-				MIN = Math.min(val, MIN);
-			}
+			MIN = Math.min(val, MIN);
 			return;
 		}
 		
@@ -62,12 +55,9 @@ public class Main{
 			if(visited[i]) {
 				continue;
 			}
-			int[] cur = chickens.get(i);
 			visited[i] = true;
-			arr[cur[1]][cur[0]] = 2;
 			backtracking(i+1, cnt+1);
 			visited[i] = false;
-			arr[cur[1]][cur[0]] = 0;
 		}
 	}
 	
@@ -85,8 +75,5 @@ public class Main{
 		
 		return min;
 	}
-	
-	static boolean isBoundary(int x, int y) {
-		return 0 <= x && x < N && 0 <= y && y < N;
-	}
+
 }
