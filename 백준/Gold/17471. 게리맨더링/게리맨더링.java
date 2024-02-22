@@ -105,7 +105,7 @@ public class Main {
 			}
 			check[i] = true;
 			l.add(i);
-			pomutation(depth+1, l);
+			pomutation(i+1, l);
 			l.remove(l.size() - 1);
 			check[i] = false;
 		}
