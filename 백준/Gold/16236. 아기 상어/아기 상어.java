@@ -1,10 +1,5 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 	static int N;
@@ -41,10 +36,8 @@ public class Main {
 		bfs();
 		System.out.println(answer);
 	}
-	
 
 	static void bfs() {
-		//print();
 		while(fCount != 0) {
 			Fish find = findFish();
 			if(find == null) {
@@ -55,8 +48,6 @@ public class Main {
 			fCount--;
 			curY = find.y;
 			curX = find.x;
-			//print();
-			//System.out.println(curY + " " +curX + " " + find.d + " " + find.size + " " + size);
 			arr[curY][curX] = 0;
 			if(size == count) {
 				count=0;
@@ -123,10 +114,6 @@ public class Main {
 		
 		return null;
 	}
-	
-	static int getTime(Fish f, int x, int y) {
-		return Math.abs(x - f.x) + Math.abs(y - f.y); 
-	}
 
 	static class Fish implements Comparable<Fish> {
 		int x;
@@ -136,7 +123,6 @@ public class Main {
 		Fish(int a, int b, int c) {
 			x = a; y = b; size = c;
 		}
-		
 		public int compareTo(Fish f) {
 			if(d != f.d) {
 				return d - f.d;
@@ -147,23 +133,5 @@ public class Main {
 			}
 			return x - f.x;
 		}
-	}
-	
-	static void print() {
-		for(int i = 0 ; i< N; i++) {
-			for(int j = 0; j < N; j++) {
-				if(i == curY && j == curX) {
-					System.out.print(" X ");
-				}else {
-					if(arr[i][j] == 0) {
-						System.out.print(" . ");
-					}else {
-						System.out.print(" " +arr[i][j]+" ");
-					}
-				}
-			}
-			System.out.println();
-		}
-		System.out.println();
 	}
 }
