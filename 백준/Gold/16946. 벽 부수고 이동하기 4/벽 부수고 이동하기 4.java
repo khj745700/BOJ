@@ -85,10 +85,10 @@ public class Main {
             }
     }
 
-    public static int[] convert(String[] temp) {
-        int[] result = new int[temp.length];
-        for(int i=0; i<temp.length; i++)
-            result[i] = Integer.parseInt(temp[i]);
+    public static int[] convert(String temp) {
+        int[] result = new int[temp.length()];
+        for(int i=0; i<temp.length(); i++)
+            result[i] = temp.charAt(i) -'0';
         return result;
     }
 
@@ -104,7 +104,7 @@ public class Main {
         queue = new ArrayDeque<int[]>();
         set = new HashSet<>();
         for(int i=0; i<n; i++)
-            matrix[i] = convert(br.readLine().split(""));
+            matrix[i] = convert(br.readLine());
         solution();
     }
 }
