@@ -39,27 +39,23 @@ public class Main {
         int find = 0;
         switch (arr[val / M][val % M]){
             case 'D':
-                find = find(val + M);
-                if(unionFind(find, val)) {
-                    dfs(val);
+                if(unionFind(val + M, val)) {
+                    dfs(val + M);
                 }
                 break;
             case 'R':
-                find = find(val + 1);
-                if(unionFind(find, val)) {
-                    dfs(val);
+                if(unionFind(val + 1, val)) {
+                    dfs(val + 1);
                 }
                 break;
             case 'L':
-                find = find(val - 1);
-                if(unionFind(find, val)) {
-                    dfs(val);
+                if(unionFind(val - 1, val)) {
+                    dfs(val - 1);
                 }
                 break;
             case 'U':
-                find = find(val - M);
-                if(unionFind(find, val)) {
-                    dfs(val);
+                if(unionFind(val - M, val)) {
+                    dfs(val - M);
                 }
                 break;
         }
