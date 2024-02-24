@@ -17,11 +17,12 @@ public class Main {
         int x;
         @Override
         public int hashCode() {
-            return y*10000+x %1234567;
+            return (y*10000+x)%1234567;
         }
         @Override
         public boolean equals(Object obj) {
-            return this.y == ((Point)obj).y && this.x == ((Point)obj).x;
+            Point target = (Point) obj;
+            return this.y == target.y && this.x == target.x;
         }
     }
     static int n;
@@ -50,8 +51,8 @@ public class Main {
     }
 
     public static void bfs(int i, int j) {
-        list.clear();
-        set.clear();
+        list=new ArrayList<>();
+        set = new HashSet<>();
         queue.add(new int[] {i, j});
         visited[i][j] = true;
         int cnt=0;
