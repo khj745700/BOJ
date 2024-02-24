@@ -3,130 +3,107 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Queue;
-import java.util.StringTokenizer;
- 
+
 public class Main {
-	static int N, M;
-	static int[][] arr;
-	static int[][] ans;
-	static int[][] room;
-	static boolean[][] visited;
-	static int[] dx = {0,0,-1,1};
-	static int[] dy = {-1,1,0,0};
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		
-		visited = new boolean[N][M];
-		arr = new int[N][M];
-		ans = new int[N][M];
-		room = new int[N][M];
-		for(int i = 0; i < N; i++) {
-			String input = br.readLine();
-			for(int j = 0 ; j < M; j++) {
-				arr[i][j] = input.charAt(j) -'0';
-				ans[i][j] = arr[i][j];
-				if(arr[i][j] == 1) {
-					arr[i][j] = -1;
-				}
-			}
-		}
-		
-		int count = 0;
-		for(int i = 0 ; i < N; i++) {
-			for(int j = 0 ; j < M; j++ ) {
-				if(!visited[i][j] && arr[i][j] == 0) {
-					bfs(j,i, ++count);
-				}
-			}
-		}
-		
-		
-		List<Integer> marks = new ArrayList<>(4);
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < M; j++) {
-				if(arr[i][j] != -1) {
-					continue;
-				}
-				for(int d = 0; d < 4; d++) {
-					int curX = j + dx[d];
-					int curY = i + dy[d];
-					if(!isBoundary(curX, curY)) {
-						continue;
-					}
-					
-					if(arr[curY][curX] == -1) {
-						continue;
-					}
-					if(marks.contains(room[curY][curX])) {
-						continue;
-					}
-					marks.add(room[curY][curX]);
-					ans[i][j] += arr[curY][curX];
-				}
-				marks.clear();
-				ans[i][j] %= 10;
-			}
-		}
-		
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < M; j++) {
-				if(arr[i][j] != -1) {
-					sb.append(0);
-				}else {
-					sb.append(ans[i][j]);
-				}
-			}
-			sb.append('\n');
-		}
-		
-		System.out.println(sb);
-	}
-	
-	
-	static void bfs(int x, int y, int mark) {
-		Queue<int[]> q = new ArrayDeque<>();
-		Queue<int[]> jobQ = new ArrayDeque<>();
-		
-		q.add(new int[] {x, y});
-		while(!q.isEmpty()) {
-			int[] cur = q.poll();
-			int curX = cur[0];
-			int curY = cur[1];
-			if(visited[curY][curX]) {
-				continue;
-			}
-			visited[curY][curX] = true;
-			jobQ.add(cur);
-			for(int i = 0; i < 4; i++) {
-				int cx = curX + dx[i];
-				int cy = curY + dy[i];
-				
-				if(!isBoundary(cx, cy)) {
-					continue;
-				}
-				
-				if(!visited[cy][cx] && arr[cy][cx] == 0) {
-					q.add(new int[] {cx, cy});
-				}
-				
-			}
-		}
-		
-		int val = jobQ.size() % 10;
-		while(!jobQ.isEmpty()) {
-			int[] cur = jobQ.poll();
-			arr[cur[1]][cur[0]] = val;
-			room[cur[1]][cur[0]] = mark;
-		}
-	}
-	
-	static boolean isBoundary(int x, int y) {
-		return 0 <= x && x < M && 0 <= y && y < N;
-	}
+    static class Point{
+        Point(int y, int x){
+            this.y = y;
+            this.x = x;
+        }
+        int y;
+        int x;
+        @Override
+        public int hashCode() {
+            return y*10000+x %1234567;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            return this.y == ((Point)obj).y && this.x == ((Point)obj).x;
+        }
+    }
+    static int n;
+    static int m;
+    static int[][] matrix;
+    static boolean[][] visited;
+    static int[] dx = {0, 0, -1, 1};
+    static int[] dy = {1, -1, 0, 0};
+    static ArrayList<int[]> list;
+    static HashSet<Point> set;
+    static Queue<int[]> queue;
+    static StringBuilder sb;
+
+    public static void solution() {
+        for(int i=0; i<n; i++)
+            for(int j=0; j<m; j++)
+                if(matrix[i][j] == 0 && !visited[i][j])
+                    bfs(i, j);
+
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++)
+                sb.append(matrix[i][j]%10);
+            sb.append("\n");
+        }
+        System.out.println(sb.toString());
+    }
+
+    public static void bfs(int i, int j) {
+        list.clear();
+        set.clear();
+        queue.add(new int[] {i, j});
+        visited[i][j] = true;
+        int cnt=0;
+        while(!queue.isEmpty()) {
+            int[] node = queue.poll();
+            list.add(node);
+            cnt++;
+            for(int k=0; k<4; k++) {
+                int y = node[0]+dy[k];
+                int x = node[1]+dx[k];
+                if(y<0 || y>=n || x<0 || x>=m)
+                    continue;
+                if(matrix[y][x]==0 && !visited[y][x]) {
+                    visited[y][x] = true;
+                    queue.add(new int[] {y, x});
+                }
+            }
+        }
+        for(int[] cell : list)
+            for(int k=0; k<4; k++) {
+                int y = cell[0]+dy[k];
+                int x = cell[1]+dx[k];
+                if(y<0 || y>=n || x<0 || x>=m)
+                    continue;
+                Point point = new Point(y, x);
+                if(matrix[y][x] != 0 && !set.contains(point)) {
+                    matrix[y][x] += cnt;
+                    set.add(point);
+                }
+            }
+    }
+
+    public static int[] convert(String[] temp) {
+        int[] result = new int[temp.length];
+        for(int i=0; i<temp.length; i++)
+            result[i] = Integer.parseInt(temp[i]);
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] temp = br.readLine().split(" ");
+        n = Integer.parseInt(temp[0]);
+        m = Integer.parseInt(temp[1]);
+        matrix = new int[n][];
+        visited = new boolean[n][m];
+        sb = new StringBuilder();
+        list = new ArrayList<int[]>();
+        queue = new ArrayDeque<int[]>();
+        set = new HashSet<>();
+        for(int i=0; i<n; i++)
+            matrix[i] = convert(br.readLine().split(""));
+        solution();
+    }
 }
