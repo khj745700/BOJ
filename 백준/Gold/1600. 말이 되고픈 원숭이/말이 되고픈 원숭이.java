@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 
@@ -33,7 +34,7 @@ public class Main {
 	
 	
 	static int bfs() {
-		PriorityQueue<Case> pq = new PriorityQueue<>();
+		Queue<Case> pq = new ArrayDeque<>();
 		pq.add(new Case(0,0,K,0));
 
 		while(!pq.isEmpty()) {
