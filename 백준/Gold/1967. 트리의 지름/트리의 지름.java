@@ -29,8 +29,8 @@ public class Main {
 			//양방향으로 연결을 잡는다.
 		}
 		int max = 0;
-		PriorityQueue<Integer> pq = new PriorityQueue<>((i1,i2) -> (i2 - i1));
 		for(int i = 1; i <= N; i++) {
+			PriorityQueue<Integer> pq = new PriorityQueue<>((i1,i2) -> (i2 - i1));
 			if(tree[i].size() <= 1) {
 				continue;
 			}
@@ -41,7 +41,6 @@ public class Main {
 			sum += pq.poll();
 			sum += pq.poll();
 			max = Math.max(sum, max);
-			pq.clear();
 		}
 		System.out.println(max);
 	}
