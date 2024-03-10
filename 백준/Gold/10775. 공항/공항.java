@@ -19,28 +19,32 @@ public class Main {
         int count = 0;
         for(int i = 0; i < P; i++) {
             int val = Integer.parseInt(br.readLine());
-            if(setGate(val)){
-                count++;
-            }else {
+            if((val = find(val)) == 0) {
                 break;
             }
+            union(val, val-1);
+            count++;
         }
         System.out.println(count);
     }
-
-
-    static boolean setGate(int idx) {
-
-        for(int i = dist[idx]; i >= 1; i--){
-            if(!gate[i]){
-                for(int j = idx; j>= i; j--){
-                    dist[j] = i;
-                }
-                return gate[i] = true;
-            }
+    static int find(int v){
+        if(v == dist[v]){
+            return v;
         }
 
-        return false;
+        return dist[v] = find(dist[v]);
+    }
+
+    static boolean union(int a, int b) {
+        a = find(a);
+        b = find(b);
+
+        if(a == b) {
+            return false;
+        }
+
+        dist[a] = b;
+        return true;
     }
 
 }
