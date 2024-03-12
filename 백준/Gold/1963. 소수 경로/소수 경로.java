@@ -39,10 +39,6 @@ public class Main {
 		q.add(startNum);
 		visited[start] = true;
 		
-		for(int i = 0; i <= 1000; i++) {
-			visited[i] = true;
-		}
-		
 		while(!q.isEmpty()) {
 			Num cur = q.poll();
 			
