@@ -28,13 +28,13 @@ public class Main {
 			
 			Map.Entry<Integer, Integer> target = map.ceilingEntry(val+M);
 			if(target == null) {
-				continue;
+				break;
 			}
 			if(target.getKey() == val && target.getValue() == 1) {
 				target = map.ceilingEntry(val + M + 1);
 			}
 			if(target == null) {
-				continue;
+				break;
 			}
 			
 			MIN = Math.min(MIN, target.getKey() - val);
