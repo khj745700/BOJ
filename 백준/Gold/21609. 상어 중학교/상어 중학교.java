@@ -58,25 +58,13 @@ public class Main {
 		}
 		System.out.println(ans);
 	}
-	
-	//먼저 1칸마다 방문하면서 colors 채우기
-	
-	static void print() {
-		for(int i = 0; i < N; i++) {
-			System.out.println(Arrays.toString(arr[i]));
-		}
-		System.out.println();
-	}
-	
 	static void bfs(int x, int y) {
 		Block b = new Block();
 		Queue<int[]> q = new ArrayDeque<>();
 		List<int[]> rainbowJobQ = new ArrayList<>();
-		
 		q.add(new int[] {x,y});
 		b.list.add(q.peek());
 		visited[y][x] = true;
-		
 		while(!q.isEmpty()) {
 			int[] cur = q.poll();
 			
@@ -120,15 +108,12 @@ public class Main {
 			visited[cur[1]][cur[0]] = false;
 		}
 	}
-	
-
 	static int remove(Block block) {
 		for(int[] cur : block.list) {
 			arr[cur[1]][cur[0]] = -2;
 		}
 		return block.list.size();
 	}
-	
 	static void rotate() {
 		for(int i = 0; i < N; i++) {
 			for(int j = i+1 ; j < N; j++) {
@@ -137,14 +122,12 @@ public class Main {
 				arr[j][i] = temp;
 			}
 		}
-		
 		for(int i = 0 ; i < N / 2; i++) {
 			int[] temp = arr[i];
 			arr[i] = arr[N-1-i];
 			arr[N-1-i] = temp;
 		}
 	}
-	
 	static void gravity() {
 		for(int i = 0; i < N; i++) {
 			for(int j = N-1 ; j >= 0; j--) {
@@ -168,20 +151,16 @@ public class Main {
 			}
 		}
 	}
-	
 	static boolean isNotBoundary(int x, int y) {
 		return x < 0 || N == x || y < 0 || N == y;
 	}
-	
 	static class Block implements Comparable<Block>{
 		List<int[]> list;
 		int rainbow;
-		
 		Block() {
 			list = new ArrayList<>();
 			rainbow=0;
 		}
-
 		@Override
 		public int compareTo(Main.Block o) {
 			if(list.size() != o.list.size()) {
