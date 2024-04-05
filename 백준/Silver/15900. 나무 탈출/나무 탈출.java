@@ -15,7 +15,7 @@ public class Main {
     	N = Integer.parseInt(br.readLine());
     	bucket = new ArrayList<>(N+1);
     	for(int i = 0; i <= N; i++) {
-    		bucket.add(new ArrayList<>(5));
+    		bucket.add(new ArrayList<>());
     	}
     	for(int i = 0 ; i < N-1; i++) {
     		StringTokenizer st = new StringTokenizer(br.readLine());
