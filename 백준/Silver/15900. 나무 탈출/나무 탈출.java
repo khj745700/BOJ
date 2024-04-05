@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	static HashMap<Integer, List<Integer>> bucket;
+	static List<List<Integer>> bucket;
 	static ArrayList<Integer> root;
 	static int N;
 	static int depth = 0;
     public static void main(String[] args) throws Exception{
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	N = Integer.parseInt(br.readLine());
-    	root = new ArrayList<>();
-    	bucket = new HashMap<>();
-    	bucket.put(1, root);
-    	for(int i = 2; i <= N; i++) {
-    		bucket.put(i, new ArrayList<>());
+    	bucket = new ArrayList<>(N+1);
+    	for(int i = 0; i <= N; i++) {
+    		bucket.add(new ArrayList<>());
     	}
     	for(int i = 0 ; i < N-1; i++) {
     		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -30,7 +28,6 @@ public class Main {
     	dfsCount(null, 1, 0);
     	System.out.println(depth % 2 == 0 ? "No" : "Yes");
     }
-    
     
     static void dfsCount(Integer parent, Integer cur, int count) {
     	List<Integer> target = bucket.get(cur);
