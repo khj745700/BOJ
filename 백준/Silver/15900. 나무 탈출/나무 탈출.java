@@ -38,24 +38,18 @@ public class Main {
     static void dfsCount(Node cur, int count) {
     	visited[cur.val] = true;
     	
-    	if(cur.childs.size() == 0) {
+    	if(cur.childs.size() == 1 && cur != root) {
     		depth+= count;
     		return;
     	}
     	
-    	boolean flag = false;
     	for(Node v : cur.childs) {
     		if(visited[v.val]) {
     			continue;
     		}
     		dfsCount(v, count+1);
-    		flag = true;
     	}
     	
-    	if(!flag) {
-    		depth+= count;
-    		return;
-    	}
     }
 
     static class Node {
