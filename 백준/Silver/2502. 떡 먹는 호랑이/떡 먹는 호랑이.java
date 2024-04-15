@@ -3,15 +3,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-/**
- * Hello world!
- *
- */
 public class Main {
 	static int[] dp;
     public static void main( String[] args ) throws IOException{
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	StringTokenizer st = new StringTokenizer(br.readLine());
+    	StringBuilder sb = new StringBuilder();
     	int N = Integer.parseInt(st.nextToken());
     	int target = Integer.parseInt(st.nextToken());
     	dp = new int[N + 1];
@@ -38,7 +35,7 @@ public class Main {
     			break;
     		}
     	}
-    	System.out.println(l);
-    	System.out.println(r);
+    	sb.append(l).append('\n').append(r);
+    	System.out.println(sb);
     }
 }
