@@ -1,259 +1,272 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
-    static char[][] map;
-    static int N, M;
 
-    static PairBall start;
-    static int endX;
-    static int endY;
-    static boolean[][][][] visited;
-    public static void main(String[] args) throws IOException {
+    static class Node {
+        int x;
+        int y;
+
+        public Node(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static char[][] map;
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
+    static Node Blue;
+    static Node Red;
+    static Node Goal;
+    static int blueCount = 1;
+    static int redCount = 1;
+    static int ans = Integer.MAX_VALUE;
+    static List<Character> ansList = new ArrayList<>();
+    static List<Character> currentList = new ArrayList<>();
+    static int[][][][] visited;
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
 
-        map = new char[N][M];
-        visited = new boolean[N][M][N][M];
-        start = new PairBall();
-        for(int i = 0; i < N; i++) {
-            String input = br.readLine();
-            for(int j = 0; j < M; j++) {
-                map[i][j] = input.charAt(j);
-
-                if(map[i][j] == 'R') {
-                    start.rx = j;
-                    start.ry = i;
-                    map[i][j] = '.';
-                }
-
-                if(map[i][j] == 'B') {
-                    start.bx = j;
-                    start.by = i;
-                    map[i][j] = '.';
-                }
-
-                if(map[i][j] == 'O') {
-                    endX = j;
-                    endY = i;
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        visited = new int[n][m][n][m];
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                for(int k = 0; k < n; k++) {
+                    Arrays.fill(visited[i][j][k], Integer.MAX_VALUE);
                 }
             }
         }
+        map = new char[n][m];
 
-        System.out.println(simulation());
+        for (int i = 0; i < map.length; i++) {
+            String str = br.readLine();
+
+            for (int j = 0; j < map[i].length; j++) {
+                map[i][j] = str.charAt(j);
+
+                if (map[i][j] == 'R') {
+                    Red = new Node(i, j);
+                } else if (map[i][j] == 'B') {
+                    Blue = new Node(i, j);
+                } else if (map[i][j] == 'O') {
+                    Goal = new Node(i, j);
+                }
+
+            }
+        }
+        int[] answer = {Integer.MAX_VALUE};
+        dfs(0, -1, answer);
+
+        System.out.println(ans == Integer.MAX_VALUE ? -1 : ans);
+
+
     }
 
-    static int simulation() {
-        Queue<PairBall> q = new ArrayDeque<>();
-        q.add(start);
-        while(!q.isEmpty()) {
-            PairBall cur = q.poll();
-            if(visited[cur.ry][cur.rx][cur.by][cur.bx]) {
-                continue;
-            }
-            if(cur.d == -1) {
-                continue;
-            }
-            if(cur.bx == endX && cur.by == endY) {
-                continue;
-            }
-            if(cur.rx == endX && cur.ry == endY) {
-                return cur.d;
-            }
-            visited[cur.ry][cur.rx][cur.by][cur.bx] = true;
-            q.add(goLeft(cur));
-            q.add(goRight(cur));
-            q.add(goDown(cur));
-            q.add(goUp(cur));
+    static void dfs(int dept, int prevDire, int[] answer) {
+        if (answer[0] <= dept) {
+            return;
         }
 
-        return -1;
+        for (int i = 0; i < 4; i++) {
+            if (((i + 2) % 4) != prevDire && i != prevDire && canMove(i, dept, answer)) {
+
+//                if(count == 14) System.exit(0);
+//                count++;
+//                System.out.println("---------------------------------");
+//                System.out.println("i = " + i + " dept = " + dept);
+//                System.out.println("======== before ============");
+//                print();
+                int currentBlueMove = blueCount;
+                int currentRedMove = redCount;
+                if(!move(i, currentBlueMove, currentRedMove, dept)) {
+                    continue;
+                }
+//                System.out.println(" ========== after ============");
+//                print();
+                dfs(dept + 1, i, answer);
+                currentList.remove(currentList.size() - 1);
+                rollback(i, currentBlueMove, currentRedMove);
+            }
+
+        }
+
     }
 
-    static PairBall goLeft(PairBall pb) {
-        //블루의 가야 할 곳 찾기.
-        int blueX = pb.bx;
-        int blueY = pb.by;
-        for(int i = 0; i < M; i++) {
-            if(map[blueY][blueX] == 'O') {
-                break;
-            }
-            if(map[blueY][blueX-1] == '#') {
-                break;
-            }
+    static boolean move(int dire, int blueMove, int redMove, int depth) {
+        int newBX = Blue.x;
+        int newBY = Blue.y;
+        int newRX = Red.x;
+        int newRY = Red.y;
 
-            --blueX;
+        newBX += dx[dire] * blueMove;
+        newBY += dy[dire] * blueMove;
+
+
+        newRX += dx[dire] * redMove;
+        newRY += dy[dire] * redMove;
+
+        if (visited[newRX][newRY][newBX][newBY] < depth) {
+            return false;
         }
 
-        //레드의 가야할 곳 찾기.
-        int redX = pb.rx;
-        int redY = pb.ry;
-        for(int i = 0; i < M; i++) {
-            if(map[redY][redX] == 'O') {
+        visited[newRX][newRY][newBX][newBY] = depth;
+
+        map[Blue.x][Blue.y] = '.';
+        map[newBX][newBY] = 'B';
+        Blue.x = newBX;
+        Blue.y = newBY;
+        map[Red.x][Red.y] = '.';
+        map[newRX][newRY] = 'R';
+        Red.x = newRX;
+        Red.y = newRY;
+        return true;
+    }
+
+    static void rollback(int dire, int blueMove, int redMove) {
+        //반대 방향
+        dire = (dire + 2) % 4;
+
+        int newBX = Blue.x;
+        int newBY = Blue.y;
+        int newRX = Red.x;
+        int newRY = Red.y;
+
+
+        newBX += dx[dire] * blueMove;
+        newBY += dy[dire] * blueMove;
+
+
+        newRX += dx[dire] * redMove;
+        newRY += dy[dire] * redMove;
+
+        map[Blue.x][Blue.y] = '.';
+        map[Red.x][Red.y] = '.';
+        map[newBX][newBY] = 'B';
+        map[newRX][newRY] = 'R';
+        Blue.x = newBX;
+        Blue.y = newBY;
+        Red.x = newRX;
+        Red.y = newRY;
+
+    }
+
+    static boolean canMove(int dire, int dept, int[] answer) {
+        //파랑이 구슬 움직일 수 있는지
+        blueCount = 1;
+        boolean isRed = false;
+//        boolean isBlueGoal = false;
+        int x = Blue.x;
+        int y = Blue.y;
+
+        while (true) {
+
+            int newX = x + (dx[dire] * blueCount);
+            int newY = y + (dy[dire] * blueCount);
+
+            if (map[newX][newY] == '#') {
                 break;
-            }
-            if(map[redY][redX-1] == '#') {
-                break;
+            } else if (map[newX][newY] == 'R') {
+                isRed = true;
+            } else if (map[newX][newY] == 'O') {
+//                if(isRed) return false;
+//
+//                isBlueGoal = true;
+//                break;
+
+                return false;
             }
 
-            --redX;
+            blueCount++;
         }
 
-        if(redX != blueX || redY != blueY) {
+        redCount = 1;
+        boolean isBlue = false;
+        boolean isRedGoal = false;
+        x = Red.x;
+        y = Red.y;
 
-            return new PairBall(redX, redY, blueX, blueY, pb.d+1);
-        }else {
-            if(blueX == endX && blueY == endY) {
-                return new PairBall(redX, redY, blueX, blueY, -1);
+        while (true) {
+
+            int newX = x + (dx[dire] * redCount);
+            int newY = y + (dy[dire] * redCount);
+
+            if (map[newX][newY] == '#') {
+                break;
+            } else if (map[newX][newY] == 'B') {
+                isBlue = true;
+            } else if (map[newX][newY] == 'O') {
+                if (isBlue) return false;
+
+                isRedGoal = true;
+                break;
             }
-            if(pb.rx > pb.bx) {
-                return new PairBall(redX+1, redY, blueX, blueY, pb.d + 1);
+            redCount++;
+
+        }
+
+        if (isRedGoal) {
+//            System.out.println(count);
+
+            if (dept + 1 < ans) {
+                ansList = new ArrayList<>();
+
+                for (char element : currentList) {
+                    ansList.add(element);
+                }
+
+                if (dire == 0) {
+                    ansList.add('U');
+                } else if (dire == 1) {
+                    ansList.add('R');
+                } else if (dire == 2) {
+                    ansList.add('D');
+                } else if (dire == 3) {
+                    ansList.add('L');
+                }
             }
-            return new PairBall(redX, redY, blueX + 1, blueY, pb.d + 1);
+
+
+            ans = Math.min(ans, dept + 1);
+            answer[0] = ans;
+
+//            System.exit(0);
+        }
+
+        //파란색이 안움직인 경우 + 빨간색이 안움직인 경우 -> return false;
+        if (blueCount == 1 && redCount == 1) return false;
+        if ((blueCount == 2 && isRed) && (redCount == 2 && isBlue)) return false;
+
+        if (dire == 0) {
+            currentList.add('U');
+        } else if (dire == 1) {
+            currentList.add('R');
+        } else if (dire == 2) {
+            currentList.add('D');
+        } else if (dire == 3) {
+            currentList.add('L');
+        }
+
+        blueCount = isRed ? blueCount - 1 : blueCount;
+        redCount = isBlue ? redCount - 1 : redCount;
+        blueCount--;
+        redCount--;
+        return true;
+
+    }
+
+
+    static void print() {
+        for (int i = 0; i < map.length; i++) {
+            System.out.println(Arrays.toString(map[i]));
         }
     }
 
-    static PairBall goRight(PairBall pb) {
-        //블루의 가야 할 곳 찾기.
-        int blueX = pb.bx;
-        int blueY = pb.by;
-        for(int i = 0; i < M; i++) {
-            if(map[blueY][blueX] == 'O') {
-                break;
-            }
-            if(map[blueY][blueX + 1] == '#') {
-                break;
-            }
-            ++blueX;
-        }
-
-        //레드의 가야할 곳 찾기.
-        int redX = pb.rx;
-        int redY = pb.ry;
-        for(int i = 0; i < M; i++) {
-            if(map[redY][redX] == 'O') {
-                break;
-            }
-            if(map[redY][redX+1] == '#') {
-                break;
-            }
-            ++redX;
-        }
-
-        if(redX != blueX || redY != blueY) {
-            return new PairBall(redX, redY, blueX, blueY, pb.d+1);
-        }else {
-            if(blueX == endX && blueY == endY) {
-                return new PairBall(redX, redY, blueX, blueY, -1);
-            }
-            if(pb.rx < pb.bx) {
-                return new PairBall(redX-1, redY, blueX, blueY, pb.d + 1);
-            }
-
-            return new PairBall(redX, redY, blueX - 1, blueY, pb.d + 1);
-        }
-    }
-
-    static PairBall goUp(PairBall pb) {
-        //블루의 가야 할 곳 찾기.
-        int blueX = pb.bx;
-        int blueY = pb.by;
-        for(int i = 0; i < N; i++) {
-            if(map[blueY][blueX] == 'O') {
-                break;
-            }
-            if(map[blueY-1][blueX] == '#') {
-                break;
-            }
-
-
-            --blueY;
-        }
-
-        //레드의 가야할 곳 찾기.
-        int redX = pb.rx;
-        int redY = pb.ry;
-        for(int i = 0; i < N; i++) {
-            if(map[redY][redX] == 'O') {
-                break;
-            }
-            if(map[redY-1][redX] == '#') {
-                break;
-            }
-
-            --redY;
-        }
-
-        if(redX != blueX || redY != blueY) {
-            return new PairBall(redX, redY, blueX, blueY, pb.d+1);
-        }else {
-            if(blueX == endX && blueY == endY) {
-                return new PairBall(redX, redY, blueX, blueY, -1);
-            }
-            if(pb.ry < pb.by) {
-                return new PairBall(redX, redY, blueX, blueY+1, pb.d + 1);
-            }
-            return new PairBall(redX, redY+1, blueX, blueY, pb.d + 1);
-        }
-    }
-
-    static PairBall goDown(PairBall pb) {
-        //블루의 가야 할 곳 찾기.
-        int blueX = pb.bx;
-        int blueY = pb.by;
-        for(int i = 0; i < N; i++) {
-            if(map[blueY][blueX] == 'O') {
-                break;
-            }
-            if(map[blueY+1][blueX] == '#') {
-                break;
-            }
-            ++blueY;
-        }
-
-        //레드의 가야할 곳 찾기.
-        int redX = pb.rx;
-        int redY = pb.ry;
-        for(int i = 0; i < N; i++) {
-            if(map[redY][redX] == 'O') {
-                break;
-            }
-            if(map[redY+1][redX] == '#') {
-                break;
-            }
-
-            ++redY;
-        }
-
-        if(redX != blueX || redY != blueY) {
-            return new PairBall(redX, redY, blueX, blueY, pb.d+1);
-        }else {
-            if(blueX == endX && blueY == endY) {
-                return new PairBall(redX, redY, blueX, blueY, -1);
-            }
-            if(pb.ry < pb.by) {
-                return new PairBall(redX, redY-1, blueX, blueY, pb.d + 1);
-            }
-            return new PairBall(redX, redY, blueX, blueY - 1, pb.d + 1);
-        }
-    }
-
-    static class PairBall {
-        int rx;
-        int ry;
-        int bx;
-        int by;
-        int d;
-
-        PairBall(int a, int b, int c, int d, int v) {
-            rx = a; ry = b; bx = c ; by = d; this.d = v;
-        }
-        PairBall() {
-
-        }
-    }
 }
