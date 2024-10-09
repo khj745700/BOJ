@@ -11,13 +11,10 @@ class Solution {
                 stack.addFirst(start++);
             }
             
-            boolean flag = false;
-            while(!stack.isEmpty() && stack.peek() == order[i]) {
+            if(!stack.isEmpty() && stack.peek() == order[i]) {
                 stack.removeFirst();
                 count++;
-                flag = true;
-            }
-            if(!flag) {
+            }else {
                 break;
             }
         }
