@@ -40,6 +40,7 @@ public class Main {
             list[i] = new ArrayList<>();
         }
 
+
         for(int i=0;i<n;i++){
             st = new StringTokenizer(br.readLine());
 
@@ -49,15 +50,11 @@ public class Main {
             list[b].add(a);
         }
 
-//        for(int i=0;i<list.length;i++){
-//            System.out.println(list[i]);
-//        }
-
         for(int i=0;i<list.length;i++){
             Collections.sort(list[i]);
         }
 
-        Queue<Node> queue = new LinkedList<>();
+        Queue<Node> queue = new ArrayDeque<>();
         queue.add(new Node(0, 0, 0));
         int answer = -1;
 
@@ -86,7 +83,8 @@ public class Main {
 //                System.out.println("y 값 = " + i);
                 visitedList = new ArrayList<>();
                 for(int j=0;j<list[i].size();j++){
-                    if(list[i].get(j) < x-2 || list[i].get(j) > x+2) continue;
+                    if(list[i].get(j) < x - 2 ) continue;
+                    if(list[i].get(j) > x + 2) break;
 
                     visitedList.add(list[i].get(j));
                     queue.add(new Node(list[i].get(j), i, currentNode.step + 1));
