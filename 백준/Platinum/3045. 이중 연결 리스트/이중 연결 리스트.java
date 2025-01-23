@@ -11,6 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
@@ -83,19 +84,22 @@ public class Main {
             }
         }
 
-        System.out.println(N - lisLength);
-
+        sb.append(N - lisLength);
+        sb.append('\n');
         for (int i = lisLength; i >= 1; i--) {
             int now = lis[i] - 1;
             while (now > lis[i - 1]) {
-                System.out.println("A " + now + " " + (now + 1));
+                sb.append("A " + now + " " + (now + 1));
+                sb.append('\n');
                 now--;
             }
         }
 
         for (int now = lis[lisLength] + 1; now <= N; now++) {
-            System.out.println("B " + now + " " + (now - 1));
+            sb.append("B " + now + " " + (now - 1));
+            sb.append('\n');
         }
+        System.out.println(sb);
     }
 
     static int lowerBound(int[] arr, int val, int length) {
