@@ -90,7 +90,6 @@ public class Main {
 
             }
         }
-        //System.out.println(count - wall);
         return count - wall;
     }
 
