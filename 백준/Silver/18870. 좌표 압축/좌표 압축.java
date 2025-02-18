@@ -47,7 +47,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         input(br);
-        System.out.println(solution());
+        System.out.print(solution());
     }
 
     static class Node implements Comparable<Node> {
