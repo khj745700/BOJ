@@ -12,5 +12,6 @@ fun main() {
     var time = LocalTime.of(h, m)
 
     time = time.minusMinutes(45);
-    print(time.hour.toString() + " " + time.minute.toString())
+    print("${time.hour} ${time.minute}")
 }
+
