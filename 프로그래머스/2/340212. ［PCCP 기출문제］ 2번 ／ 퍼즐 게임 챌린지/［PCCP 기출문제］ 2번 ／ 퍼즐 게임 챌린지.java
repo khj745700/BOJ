@@ -2,7 +2,7 @@ class Solution {
     public int solution(int[] diffs, int[] times, long limit) {
         
         long l = 1;
-        long r = limit + l;
+        long r = 1000000;
         
         long answer = Long.MAX_VALUE;
         while(l < r) {
