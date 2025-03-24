@@ -32,8 +32,6 @@ fun init(n: Int) {
         }
     }
 }
-val successSet = HashSet<Int>()
-
 fun find(x: Int): Boolean {
     val set = HashSet<Int>()
 
@@ -46,15 +44,8 @@ fun find(x: Int): Boolean {
         if(set.contains(sum)) {
             return false
         }
-        if(successSet.contains(sum)) {
-            return true
-        }
-
         set.add(sum)
         target = sum
-    }
-    for(n in set) {
-        successSet.add(n)
     }
     return true
 }
